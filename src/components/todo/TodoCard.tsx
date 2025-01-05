@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@/redux/hook";
 import { Button } from "../ui/button";
-import { removeTodo } from "@/redux/features/todoSlice";
+import { removeTodo, toggleCheck } from "@/redux/features/todoSlice";
 
 type TTodoCardProps = {
   title: string;
@@ -11,13 +11,16 @@ type TTodoCardProps = {
 
 const TodoCard = ({ description, title, id, isCompleted }: TTodoCardProps) => {
   const dispatch = useAppDispatch();
-  const handleCheck = () => {
-    isCompleted = !isCompleted;
-    console.log(isCompleted);
-  };
+
+  
   return (
     <div className="flex justify-between p-4 my-4 bg-white border rounded-md">
-      <input onClick={() => handleCheck} type="checkbox" name="" id="" />
+      <input
+        onChange={()=>dispatch(toggleCheck(id))}
+        type="checkbox"
+        name="complete"
+        id="complete"
+      />
       <p className="font-semibold">{title}</p>
       {/* <p>Time</p> */}
       <div>
