@@ -1,20 +1,20 @@
-import { useAppSelector } from "@/redux/hook";
+// import { useAppSelector } from "@/redux/hook";
 import AddTodoModal from "./AddTodoModal";
-import TodoCard from "./TodoCard";
+import TodoCard, { TTodoCardProps } from "./TodoCard";
 import TodoFilter from "./TodoFilter";
 import { useGetTodosQuery } from "@/redux/api/api";
 
 const TodoContainer = () => {
-  const { todos } = useAppSelector((state) => state.todos);
+  // get todos from local
+  // const { todos } = useAppSelector((state) => state.todos);
 
-  const { data,  isLoading } = useGetTodosQuery(undefined);
+  const { data: todos, isLoading } = useGetTodosQuery(undefined);
 
-  if(isLoading){
-    return <p>Loading...</p>
+  if (isLoading) {
+    return <p>Loading...</p>;
   }
-  
-  console.log(data);
 
+  console.log(todos.data);
   return (
     <div>
       <div className="flex justify-between mb-4">
@@ -23,16 +23,10 @@ const TodoContainer = () => {
       </div>
       <div className="w-full h-full p-2 bg-primary-gradient rounded-xl">
         <div className="w-full h-full p-5 bg-white rounded-2xl ">
-          {todos.length > 0 ? (
+          {todos?.data?.length > 0 ? (
             <div>
-              {todos.map((item, index) => (
-                <TodoCard
-                  key={index}
-                  description={item.description}
-                  title={item.title}
-                  id={item.id}
-                  isCompleted={item.isCompleted}
-                />
+              {todos?.data?.map((item: TTodoCardProps, index: number) => (
+                <TodoCard key={index} {...item} />
               ))}
             </div>
           ) : (

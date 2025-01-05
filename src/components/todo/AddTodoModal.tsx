@@ -10,25 +10,44 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { addTodo } from "@/redux/features/todoSlice";
-import { useAppDispatch } from "@/redux/hook";
+import { useAddTodoMutation } from "@/redux/api/api";
+// import { addTodo } from "@/redux/features/todoSlice";
+// import { useAppDispatch } from "@/redux/hook";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormEvent, useState } from "react";
 
 const AddTodoModal = () => {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
-  const dispatch = useAppDispatch();
+  //! For Local State
+  // const dispatch = useAppDispatch();
+
+  //
+  // NOTE  their will be doing that is when useAddTodoMutation called the return value is like that
+  // NOTE [actualFunctionForPost,{data,isLoading,isError}] = useAddTodoMutation();
+  
+  const [addTodo, { isLoading, isError, isSuccess, data }] =
+    useAddTodoMutation();
+  console.log(data, isError, isLoading, isSuccess);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const randomString = Math.random().toString(36).substring(2, 7);
     const taskDetails = {
-      id: randomString,
+      _id: randomString,
       title: task,
       description,
+      status: "pending",
+      priority: "medium",
+      date: "2025-01-05",
     };
-    dispatch(addTodo(taskDetails));
+
+    //* Pass the taskDetails
+
+    addTodo(taskDetails);
+    //PROBLEM their is some problem
+    // dispatch(addTodo(taskDetails));
+    //  const requestedId  = useAddTodoMutation(taskDetails)
   };
   return (
     <Dialog>
