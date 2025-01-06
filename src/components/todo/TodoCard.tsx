@@ -51,7 +51,7 @@ const TodoCard = ({
           <p className="text-red-500">Pending</p>
         )}
       </div>
-      <p className="flex-[2]">{description}</p>
+      <p className="flex-[2] mr-4">{description}</p>
       <div className="space-x-4">
         <Button
           onClick={() => dispatch(removeTodo(_id))}
