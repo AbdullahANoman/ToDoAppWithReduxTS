@@ -8,8 +8,12 @@ const TodoContainer = () => {
   // get todos from local
   // const { todos } = useAppSelector((state) => state.todos);
 
+  //NOTE PollingInterval or another fetch method used to not developerFriendly
+  // const { data: todos, isLoading } = useGetTodosQuery(undefined, {
+  //   pollingInterval: 1000,
+  // });
   const { data: todos, isLoading } = useGetTodosQuery(undefined);
-
+  
   if (isLoading) {
     return <p>Loading...</p>;
   }
