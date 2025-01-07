@@ -30,7 +30,6 @@ const AddTodoModal = () => {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
 
-  console.log(priority);
   //NOTE For Local State
   // const dispatch = useAppDispatch();
 
@@ -51,7 +50,7 @@ const AddTodoModal = () => {
       // _id: randomString,
       title: task,
       description,
-      isCompleted:false,
+      isCompleted: false,
       status: "pending",
       priority: priority,
       date: "2025-01-05",

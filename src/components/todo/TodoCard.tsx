@@ -1,6 +1,5 @@
-import { useAppDispatch } from "@/redux/hook";
+import { useDeleteTodoMutation, useUpdateTodoMutation } from "@/redux/api/api";
 import { Button } from "../ui/button";
-import { removeTodo, toggleCheck } from "@/redux/features/todoSlice";
 
 export type TTodoCardProps = {
   _id: string;
@@ -8,30 +7,60 @@ export type TTodoCardProps = {
   title: string;
   description: string;
   priority: string;
-  isCompleted: boolean | undefined;
-  date: string;
+  isCompleted: boolean;
+  date?: string;
 };
 
 const TodoCard = ({
   description,
   title,
-  _id,
   isCompleted,
   priority,
+  _id,
 }: TTodoCardProps) => {
-  const dispatch = useAppDispatch();
+  // NOTE for local store
+  // const dispatch = useAppDispatch();
 
   // console.log(status, priority, date);
+
+  const [updateTodo,{isLoading}]= useUpdateTodoMutation()
+  const toggleState = () => {
+    const options = {
+      id: _id,
+      data: {
+        title,
+        description,
+        priority,
+        isCompleted: !isCompleted,
+      },
+    };
+
+
+    if(isLoading){
+      return <p>Loading......</p>
+    }
+    updateTodo(options)
+  };
+
+  const [deleteTodo,{isError}] = useDeleteTodoMutation()
+  const handleDelete = (id:string) =>{
+
+    if(isError){
+      return <p>Error at delete </p>
+    }
+    deleteTodo(id)
+  }
 
   return (
     <div className="flex items-center justify-between p-4 my-4 bg-white border rounded-md">
       <div className="flex items-center ">
         <input
+          onChange={toggleState}
           className="mr-3"
-          onChange={() => dispatch(toggleCheck(_id))}
           type="checkbox"
           name="complete"
           id="complete"
+          defaultChecked={isCompleted}
         />
       </div>
       <p className="flex-1 font-semibold ">{title}</p>
@@ -40,7 +69,9 @@ const TodoCard = ({
         <div
           className={`size-3 ${
             priority === "medium" ? "bg-yellow-500 rounded-full" : null
-          } ${priority === "high" ? "bg-red-500 rounded-full" : null} ${priority === "low" ? "bg-green-600 rounded-full" : null}`}
+          } ${priority === "high" ? "bg-red-500 rounded-full" : null} ${
+            priority === "low" ? "bg-green-600 rounded-full" : null
+          }`}
         ></div>
         <p>{priority}</p>
       </div>
@@ -53,10 +84,7 @@ const TodoCard = ({
       </div>
       <p className="flex-[2] mr-4">{description}</p>
       <div className="space-x-4">
-        <Button
-          onClick={() => dispatch(removeTodo(_id))}
-          className="bg-red-500"
-        >
+        <Button onClick={()=>handleDelete(_id)} className="bg-red-500">
           <svg
             className="size-5"
             data-slot="icon"

@@ -1,29 +1,29 @@
 // import { useAppSelector } from "@/redux/hook";
+import { useState } from "react";
 import AddTodoModal from "./AddTodoModal";
 import TodoCard, { TTodoCardProps } from "./TodoCard";
 import TodoFilter from "./TodoFilter";
 import { useGetTodosQuery } from "@/redux/api/api";
+import Loader from "../ui/Loader";
 
 const TodoContainer = () => {
+  // NOTE Make state for filter the priority
+  const [priority, setPriority] = useState<string>("");
   // get todos from local
   // const { todos } = useAppSelector((state) => state.todos);
-
   //NOTE PollingInterval or another fetch method used to not developerFriendly
   // const { data: todos, isLoading } = useGetTodosQuery(undefined, {
   //   pollingInterval: 1000,
   // });
-  const { data: todos, isLoading } = useGetTodosQuery(undefined);
-  
+  const { data: todos, isLoading } = useGetTodosQuery(priority);
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loader/>;
   }
-
-  console.log(todos.data);
   return (
     <div>
       <div className="flex justify-between mb-4">
         <AddTodoModal />
-        <TodoFilter />
+        <TodoFilter priority={priority} setPriority={setPriority} />
       </div>
       <div className="w-full h-full p-2 bg-primary-gradient rounded-xl">
         <div className="w-full h-full p-5 bg-white rounded-2xl ">
