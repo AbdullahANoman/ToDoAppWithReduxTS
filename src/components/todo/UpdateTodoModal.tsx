@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -17,70 +17,76 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useAddTodoMutation } from "@/redux/api/api";
-// import { addTodo } from "@/redux/features/todoSlice";
-// import { useAppDispatch } from "@/redux/hook";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { FormEvent, useState } from "react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "@/components/ui/label";
+import { useUpdateTodoMutation } from "@/redux/api/api";
 import { Textarea } from "../ui/textarea";
 
-const AddTodoModal = () => {
-  const [task, setTask] = useState("");
-  const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("");
+const UpdateTodoModal = ({
+  _id,
+  title,
+  description,
+  priority,
+}: {
+  description: string;
+  title: string;
+  _id: string;
+  priority: string;
+}) => {
+  const [updateTitle, setUpdateTitle] = useState(title);
+  const [updateDescription, setUpdateDescription] = useState(description);
+  const [updatePriority, setUpdatePriority] = useState(priority);
 
-  //NOTE For Local State
-  // const dispatch = useAppDispatch();
+  //NOTE mutation function get from the store
 
-  //
-  // NOTE  their will be doing that is when useAddTodoMutation called the return value is like that
+  const [updateTodo, { isLoading }] = useUpdateTodoMutation();
 
-  // NOTE [actualFunctionForPost,{data,isLoading,isError}] = useAddTodoMutation();
-
-  const [addTodo, { isLoading, isError }] = useAddTodoMutation();
-
-  if (isError) {
-    return <p>Error happen at addTodoModal</p>;
-  }
   if (isLoading) {
-    return <p>Loading ....</p>;
+    return <p>Loading...</p>;
   }
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    //NOTE make randomString to set the _id value
-    // const randomString = Math.random().toString(36).substring(2, 7);
-    const taskDetails = {
-      // _id: randomString,
-      title: task,
-      description,
-      isCompleted: false,
-      status: "pending",
-      priority: priority,
-      date: "2025-01-05",
+    const options = {
+      id: _id,
+      data: {
+        title: updateTitle,
+        description: updateDescription,
+        priority: updatePriority,
+        isCompleted: false,
+      },
     };
-
-    //NOTE Pass the taskDetails
-
-    addTodo(taskDetails);
-    //PROBLEM there is some problem
-    // dispatch(addTodo(taskDetails));
-    //  const requestedId  = useAddTodoMutation(taskDetails)
+    updateTodo(options);
   };
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button className="text-xl font-semibold bg-primary-gradient">
-          Add todo
+          <svg
+            className="size-5"
+            data-slot="icon"
+            fill="none"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+            ></path>
+          </svg>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Task</DialogTitle>
+          <DialogTitle>Update Your Task</DialogTitle>
           <DialogDescription>
-            Add your task that you want to finish ..
+            Update your task that you want to finish ..
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="grid gap-4 py-4">
@@ -91,9 +97,10 @@ const AddTodoModal = () => {
             </Label>
             <Input
               placeholder="Title"
-              onBlur={(e) => setTask(e.target.value)}
+              onBlur={(e) => setUpdateTitle(e.target.value)}
               id="task"
               className="col-span-3"
+              defaultValue={title}
             />
           </div>
           {/* description  */}
@@ -103,15 +110,19 @@ const AddTodoModal = () => {
             </Label>
             <Textarea
               placeholder="Type your description here..."
-              onBlur={(e) => setDescription(e.target.value)}
+              onBlur={(e) => setUpdateDescription(e.target.value)}
               id="description"
               className="col-span-3"
+              defaultValue={updateDescription}
             />
           </div>
           {/* priority  */}
           <div className="grid items-center grid-cols-4 gap-4">
             <Label className="text-right">Priority</Label>
-            <Select onValueChange={(value) => setPriority(value)}>
+            <Select
+              defaultValue={updatePriority}
+              onValueChange={(value) => setUpdatePriority(value)}
+            >
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Select your priority" />
               </SelectTrigger>
@@ -127,7 +138,7 @@ const AddTodoModal = () => {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit">Add Task</Button>
+              <Button type="submit">Update Task</Button>
             </DialogClose>
           </DialogFooter>
         </form>
@@ -136,4 +147,4 @@ const AddTodoModal = () => {
   );
 };
 
-export default AddTodoModal;
+export default UpdateTodoModal;

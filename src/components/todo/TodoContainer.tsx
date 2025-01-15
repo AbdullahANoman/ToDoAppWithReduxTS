@@ -17,10 +17,10 @@ const TodoContainer = () => {
   // });
   const { data: todos, isLoading } = useGetTodosQuery(priority);
   if (isLoading) {
-    return <Loader/>;
+    return <Loader />;
   }
   return (
-    <div>
+    <div className="container px-4 py-4 mx-auto">
       <div className="flex justify-between mb-4">
         <AddTodoModal />
         <TodoFilter priority={priority} setPriority={setPriority} />

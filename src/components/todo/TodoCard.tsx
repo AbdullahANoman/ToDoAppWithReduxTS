@@ -1,5 +1,6 @@
 import { useDeleteTodoMutation, useUpdateTodoMutation } from "@/redux/api/api";
 import { Button } from "../ui/button";
+import UpdateTodoModal from "./UpdateTodoModal";
 
 export type TTodoCardProps = {
   _id: string;
@@ -23,7 +24,7 @@ const TodoCard = ({
 
   // console.log(status, priority, date);
 
-  const [updateTodo,{isLoading}]= useUpdateTodoMutation()
+  const [updateTodo, { isLoading }] = useUpdateTodoMutation();
   const toggleState = () => {
     const options = {
       id: _id,
@@ -35,25 +36,24 @@ const TodoCard = ({
       },
     };
 
-
-    if(isLoading){
-      return <p>Loading......</p>
+    console.log(_id);
+    if (isLoading) {
+      return <p>Loading......</p>;
     }
-    updateTodo(options)
+    updateTodo(options);
   };
 
-  const [deleteTodo,{isError}] = useDeleteTodoMutation()
-  const handleDelete = (id:string) =>{
-
-    if(isError){
-      return <p>Error at delete </p>
+  const [deleteTodo, { isError }] = useDeleteTodoMutation();
+  const handleDelete = (id: string) => {
+    if (isError) {
+      return <p>Error at delete </p>;
     }
-    deleteTodo(id)
-  }
+    deleteTodo(id);
+  };
 
   return (
-    <div className="flex items-center justify-between p-4 my-4 bg-white border rounded-md">
-      <div className="flex items-center ">
+    <div className="flex flex-col items-center justify-between p-4 my-4 space-y-4 bg-white border rounded-md sm:flex-row sm:space-y-0">
+      <div className="flex items-center flex-1 ">
         <input
           onChange={toggleState}
           className="mr-3"
@@ -62,29 +62,28 @@ const TodoCard = ({
           id="complete"
           defaultChecked={isCompleted}
         />
+        <p className="flex-1 font-semibold text-center sm:text-left">{title}</p>
       </div>
-      <p className="flex-1 font-semibold ">{title}</p>
-      {/* <p>Time</p> */}
-      <div className="flex items-center flex-1 gap-2">
+      <div className="flex items-center justify-center flex-1 gap-2 sm:justify-start">
         <div
-          className={`size-3 ${
-            priority === "medium" ? "bg-yellow-500 rounded-full" : null
-          } ${priority === "high" ? "bg-red-500 rounded-full" : null} ${
-            priority === "low" ? "bg-green-600 rounded-full" : null
+          className={`w-3 h-3 rounded-full ${
+            priority === "medium" ? "bg-yellow-500" : ""
+          } ${priority === "high" ? "bg-red-500" : ""} ${
+            priority === "low" ? "bg-green-600" : ""
           }`}
         ></div>
         <p>{priority}</p>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 text-center sm:text-left">
         {isCompleted ? (
           <p className="text-green-500">Done</p>
         ) : (
           <p className="text-red-500">Pending</p>
         )}
       </div>
-      <p className="flex-[2] mr-4">{description}</p>
+      <p className="flex-[2] text-center sm:text-left">{description}</p>
       <div className="space-x-4">
-        <Button onClick={()=>handleDelete(_id)} className="bg-red-500">
+        <Button onClick={() => handleDelete(_id)} className="bg-red-500">
           <svg
             className="size-5"
             data-slot="icon"
@@ -102,24 +101,12 @@ const TodoCard = ({
             ></path>
           </svg>
         </Button>
-        <Button className="bg-[#5C53FE]">
-          <svg
-            className="size-5"
-            data-slot="icon"
-            fill="none"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-            ></path>
-          </svg>
-        </Button>
+        <UpdateTodoModal
+          description={description}
+          title={title}
+          _id={_id}
+          priority={priority}
+        />
       </div>
     </div>
   );
