@@ -2,7 +2,9 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const baseApi = createApi({
   reducerPath: "baseApi",
-  baseQuery: fetchBaseQuery({ baseUrl:import.meta.env.VITE_API_BASE_URL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://todo-backend-one-sage.vercel.app",
+  }),
   //NOTE AddedTags when you are going provider with this tags ann mutation will be invalid this tag
   tagTypes: ["todo"],
   endpoints: (builder) => ({
