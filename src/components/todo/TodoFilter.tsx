@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type Priority = "high" | "medium" | "low";
+type Priority = "high" | "medium" | "low" | "";
 
 const TodoFilter = ({
   priority,
