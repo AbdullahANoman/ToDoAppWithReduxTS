@@ -6,9 +6,11 @@ import TodoFilter from "./TodoFilter";
 import { useGetTodosQuery } from "@/redux/api/api";
 import Loader from "../ui/Loader";
 
+type Priority = "high" | "medium" | "low";
+
 const TodoContainer = () => {
   // NOTE Make state for filter the priority
-  const [priority, setPriority] = useState<string>("");
+  const [priority, setPriority] = useState<Priority>("high");
   // get todos from local
   // const { todos } = useAppSelector((state) => state.todos);
   //NOTE PollingInterval or another fetch method used to not developerFriendly
